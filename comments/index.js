@@ -30,8 +30,8 @@ app.post('/posts/:id/comments', async (req, res) => {
 
   // emit an event to the event bus/event broker
   await axios.post('http://localhost:4005/events', {
-    type: 'commentCreated',
-    data: { commentId, content, postId: req.params.id },
+    eventType: 'commentCreated',
+    data: { id: commentId, content, postId: req.params.id },
   });
 
   res.status(201).send(comments);
@@ -39,7 +39,7 @@ app.post('/posts/:id/comments', async (req, res) => {
 
 // listen for event from event bus
 app.post('/events', (req, res) => {
-  console.log('Event Recieved: ', req.body.type);
+  console.log('Event Recieved: ', req.body.eventType);
 
   res.send({});
 });
