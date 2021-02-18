@@ -28,20 +28,32 @@ app.post('/events', (req, res) => {
   // event
   const { eventType, data } = req.body;
 
-  // For PostCreated Type
+  // For postCreated Type
   if (eventType === 'postCreated') {
     const { id, title } = data;
     // create post
     posts[id] = { id, title, comments: [] };
   }
 
-  // For CommentCreated Type
+  // For commentCreated Type
   if (eventType === 'commentCreated') {
-    const { id, content, postId } = data;
+    const { id, content, postId, status } = data;
     // retrieve the specific post
     const post = posts[postId];
     // add newly created comment to its comments array
-    post.comments.push({ id, content });
+    post.comments.push({ id, content, status });
+  }
+
+  // For commentUpdated Type
+  if (eventType === 'commentUpdated') {
+    const { id, content, postId, status } = data;
+    // retrieve the post using the postId
+    const post = posts[postId];
+    // find the specific comment using the comment id
+    const comment = post.comments.find((comment) => comment.id === id);
+    // update the comment generically
+    comment.status = status;
+    comment.content = content;
   }
 
   console.log(posts);
