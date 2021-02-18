@@ -2,6 +2,7 @@
 // TIt also handles retrieval of posts and their associated comments. It doesn't emit any event
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 
@@ -19,15 +20,8 @@ const posts = {};
 //   },
 // };
 
-app.get('/posts', (req, res) => {
-  res.send(posts);
-});
-
-// listen for event from event bus
-app.post('/events', (req, res) => {
-  // event
-  const { eventType, data } = req.body;
-
+// helper function for handling events
+const handleEvents = (eventType, data) => {
   // For postCreated Type
   if (eventType === 'postCreated') {
     const { id, title } = data;
@@ -55,10 +49,33 @@ app.post('/events', (req, res) => {
     comment.status = status;
     comment.content = content;
   }
+};
+
+app.get('/posts', (req, res) => {
+  res.send(posts);
+});
+
+// listen for event from event bus
+app.post('/events', (req, res) => {
+  // event
+  const { eventType, data } = req.body;
+
+  handleEvents(eventType, data);
 
   console.log(posts);
 
   res.send({});
 });
 
-app.listen(4002, () => console.log('Server running on port 4002'));
+app.listen(4002, async () => {
+  console.log('Server running on port 4002');
+
+  // handle missing events for query service when it was down
+  // Get all events from the event bus data store
+  const { data } = await axios.get('http://localhost:4005/events');
+
+  for (let event of data) {
+    console.log('Processing event: ', event.eventType);
+    handleEvents(event.eventType, event.data);
+  }
+});
