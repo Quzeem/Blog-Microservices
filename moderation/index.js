@@ -14,7 +14,7 @@ app.post('/events', async (req, res) => {
     // moderate the comment by checking if it contains an unwanted word. say 'fool'
     const status = content.includes('fool') ? 'rejected' : 'approved';
     // emit an event to the event bus
-    await axios.post('http://localhost:4005/events', {
+    await axios.post('http://event-bus-clusterip-srv:4005/events', {
       eventType: 'commentModerated',
       data: { id, content, postId, status },
     });

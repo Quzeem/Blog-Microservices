@@ -24,7 +24,7 @@ app.post('/posts', async (req, res) => {
   };
 
   // emit an event to the event bus/event broker
-  await axios.post('http://localhost:4005/events', {
+  await axios.post('http://event-bus-clusterip-srv:4005/events', {
     eventType: 'postCreated',
     data: { id, title },
   });
