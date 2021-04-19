@@ -1,22 +1,22 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const PostCreate = () => {
-  const [title, setTitle] = useState('')
+  const [title, setTitle] = useState('');
 
   const submitHandler = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
-    }
+    };
 
-    await axios.post('http://localhost:4000/posts', { title }, config)
+    await axios.post('http://zeeblog.com/posts', { title }, config);
 
-    setTitle('')
-  }
+    setTitle('');
+  };
 
   return (
     <div>
@@ -32,7 +32,7 @@ const PostCreate = () => {
         <button className='btn btn-primary'>Submit</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default PostCreate
+export default PostCreate;

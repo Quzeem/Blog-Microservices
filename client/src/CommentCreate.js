@@ -14,7 +14,7 @@ const CommentCreate = ({ postId }) => {
     };
 
     await axios.post(
-      `http://localhost:4001/posts/${postId}/comments`,
+      `http://zeeblog.com/posts/${postId}/comments`,
       { content },
       config
     );
